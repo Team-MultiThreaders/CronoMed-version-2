@@ -1,6 +1,6 @@
-# ChronoMed (formerly SmartCare Flow)
+# CronoMed-version-2
 
-ChronoMed is a full-stack, concurrent-safe hospital queue management MVP built with React and Spring Boot. It provides a real-time Patient Portal for booking appointments and a live Doctor Dashboard for queue management.
+ChronoMed is a full-stack, concurrent-safe hospital queue management app built with React and Spring Boot. It provides a real-time Patient Portal for booking appointments and a live Doctor Dashboard for queue management.
 
 ## 🚀 Tech Stack
 
@@ -14,13 +14,14 @@ ChronoMed is a full-stack, concurrent-safe hospital queue management MVP built w
 ### Backend
 - **Java 17** & **Spring Boot 3.4.1**
 - **Spring Data JPA / Hibernate** (ORM)
-- **H2 In-Memory Database** (Requires zero configuration, seeded automatically on startup)
+- **PostgreSQL (Supabase)**
+- **Spring Security + JWT**
 
 ## ✨ Key Features
-- **Concurrent-Safe Booking:** Built with thread-safe `synchronized` methods to prevent race conditions during simultaneous bookings.
+- **Concurrent-Safe Booking:** Thread-safe booking to prevent race conditions during simultaneous requests.
 - **Dynamic Live Queue:** Patients can see their live position in the queue.
-- **Doctor Dashboard:** Doctors can view their exact patient load, consult patients, and mark appointments as completed.
-- **Database Agnostic:** Uses Spring Data JPA, meaning you can easily swap the H2 in-memory database out for Supabase, PostgreSQL, or MySQL by just modifying `application.properties`.
+- **Doctor Dashboard:** Doctors can view patient load, consult patients, and mark appointments as completed.
+- **JWT Auth + Patient Registration:** Secure login and self-service patient account creation.
 
 ---
 
@@ -29,7 +30,7 @@ ChronoMed is a full-stack, concurrent-safe hospital queue management MVP built w
 You will need two separate terminal windows to run both the frontend and the backend.
 
 ### 1. Start the Backend (Spring Boot)
-The backend runs on **Port 8080**. It will automatically create the database and insert the initial list of doctors.
+The backend runs on **Port 8080**. It will connect to Supabase Postgres and seed the doctor list.
 
 ```bash
 cd backend
@@ -42,7 +43,7 @@ cd backend
 ```
 
 ### 2. Start the Frontend (React)
-The frontend runs on **Port 5173**. 
+The frontend runs on **Port 5173**.
 
 ```bash
 cd frontend
@@ -58,14 +59,13 @@ npm run dev
 Once both servers are running, open your browser and navigate to:
 **http://localhost:5173/**
 
-## 👤 How to Use (Mock Login)
+## 👤 How to Use
 
-Since this is an MVP, authentication is currently mocked:
-- **Patient Login:** Select the "Patient" role, type any username, and type any password.
-- **Doctor Login:** Select the "Doctor" role, choose your name from the dynamically generated dropdown list, and type any password.
+- **Patient Registration:** Use "Register as Patient" on the login page and sign up with a username/password.
+- **Patient Login:** Use your registered username/password.
+- **Doctor Login:** Select "Doctor" and use `password123` (seeded doctors).
 
-## 🗄️ Database Changes
+## 🗄️ Doctor Seed Data
 
-If you want to add more doctors or change their average consultation times, simply edit the SQL inserts located at:
-`backend/src/main/resources/data.sql`
-The database will reset and apply these changes every time you restart the backend server.
+Doctor accounts are seeded at startup in:
+`backend/src/main/java/com/smartcare/backend/config/DataInitializer.java`
