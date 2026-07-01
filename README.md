@@ -1,4 +1,4 @@
-# CronoMed-version-2
+# CronoMed-version-2.0
 
 ChronoMed is a full-stack, concurrent-safe hospital queue management app built with React and Spring Boot. It provides a real-time Patient Portal for booking appointments and a live Doctor Dashboard for queue management.
 
