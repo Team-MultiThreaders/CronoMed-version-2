@@ -23,7 +23,6 @@ ChronoMed is a full-stack, concurrent-safe hospital queue management app built w
 - **Doctor Dashboard:** Doctors can view patient load, consult patients, and mark appointments as completed.
 - **JWT Auth + Patient Registration:** Secure login and self-service patient account creation.
 
----
 
 ## 🛠️ How to Run Locally
 
