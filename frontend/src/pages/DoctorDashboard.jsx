@@ -56,10 +56,10 @@ export default function DoctorDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="ChronoMed Logo" className="h-10" />
-            <span className="text-2xl font-bold text-blue-800 tracking-tight">ChronoMed</span>
+            <span className="text-2xl font-bold text-emerald-800 tracking-tight">ChronoMed</span>
           </div>
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full">
+            <div className="hidden sm:flex items-center gap-2 bg-emerald-50 px-4 py-2 rounded-full">
               <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
               <span className="text-sm font-medium text-brand-blue">Live Queue Active</span>
             </div>
@@ -82,14 +82,14 @@ export default function DoctorDashboard() {
            <div className="absolute top-0 right-0 p-8 opacity-10">
              <Users size={120} />
            </div>
-           <h2 className="text-xl text-blue-100 font-medium mb-2 relative z-10">Waiting for you</h2>
+           <h2 className="text-xl text-emerald-100 font-medium mb-2 relative z-10">Waiting for you</h2>
            <h1 className="text-5xl font-bold relative z-10">Total Patients in Queue: {pendingPatients.length}</h1>
         </div>
 
         {/* Stats Row */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-full bg-blue-100 text-brand-blue flex items-center justify-center">
+            <div className="w-12 h-12 rounded-full bg-emerald-100 text-brand-blue flex items-center justify-center">
               <Users size={24} />
             </div>
             <div>
@@ -121,9 +121,9 @@ export default function DoctorDashboard() {
 
         {/* Current Patient Banner */}
         {inProgress && (
-          <div className="bg-gradient-to-r from-brand-blue to-blue-600 rounded-2xl shadow-lg p-6 mb-8 flex justify-between items-center text-white">
+          <div className="bg-gradient-to-r from-brand-blue to-emerald-700 rounded-2xl shadow-lg p-6 mb-8 flex justify-between items-center text-white">
             <div>
-              <p className="text-blue-200 font-medium mb-1">Currently Consulting</p>
+              <p className="text-emerald-200 font-medium mb-1">Currently Consulting</p>
               <div className="flex items-center gap-4">
                 <span className="text-4xl font-bold">#{inProgress.queueNumber}</span>
                 <span className="text-2xl">{inProgress.patientName}</span>
@@ -142,14 +142,14 @@ export default function DoctorDashboard() {
 
         {!inProgress && pendingPatients.length > 0 && (
            <div className="bg-white rounded-2xl shadow-md border border-gray-200 p-8 mb-8 text-center">
-             <div className="w-16 h-16 bg-blue-50 text-brand-blue rounded-full flex items-center justify-center mx-auto mb-4">
+             <div className="w-16 h-16 bg-emerald-50 text-brand-blue rounded-full flex items-center justify-center mx-auto mb-4">
                <Users size={32} />
              </div>
              <h2 className="text-xl font-bold text-gray-900 mb-2">Ready for Next Patient?</h2>
              <p className="text-gray-500 mb-6">You have {pendingPatients.length} patients waiting in the queue.</p>
              <button 
                 onClick={() => handleCallNext(pendingPatients[0].id)}
-                className="bg-brand-blue text-white px-8 py-3 rounded-lg font-bold shadow-md hover:bg-blue-700 transition-all"
+                className="bg-brand-blue text-white px-8 py-3 rounded-lg font-bold shadow-md hover:bg-emerald-700 transition-all"
               >
                 Call Next Patient (Queue #{pendingPatients[0].queueNumber})
               </button>
@@ -179,7 +179,7 @@ export default function DoctorDashboard() {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase tracking-wide
                         ${apt.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' : 
-                          apt.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800 animate-pulse' : 
+                          apt.status === 'IN_PROGRESS' ? 'bg-emerald-100 text-emerald-800 animate-pulse' : 
                           'bg-green-100 text-green-800'}`}
                       >
                         {apt.status.replace('_', ' ')}
@@ -189,7 +189,7 @@ export default function DoctorDashboard() {
                       {apt.status === 'PENDING' && (
                         <button 
                           onClick={() => handleCallNext(apt.id)}
-                          className="text-brand-blue hover:text-blue-900 hover:underline"
+                          className="text-brand-blue hover:text-emerald-900 hover:underline"
                         >
                           Call This Patient
                         </button>
