@@ -1,11 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-blue: #1e40af;
+  --color-brand-blue: #059669;   /* emerald-600 — now the primary green */
+  --color-brand-green-light: #d1fae5;
 }
 
 @layer base {
   body {
     @apply bg-gray-50 text-gray-900;
   }
+}
+
+/* Login page animations */
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4); }
+  50%      { box-shadow: 0 0 0 12px rgba(5, 150, 105, 0); }
+}
+
+.animate-fade-up {
+  animation: fadeSlideUp 0.6s ease-out both;
+}
+
+.logo-pulse {
+  animation: pulseGlow 2.5s ease-in-out infinite;
 }
