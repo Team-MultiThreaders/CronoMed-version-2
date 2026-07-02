@@ -71,10 +71,10 @@ export default function PatientPortal() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
             <img src="/logo.png" alt="ChronoMed Logo" className="h-10" />
-            <span className="text-2xl font-bold text-blue-800 tracking-tight">ChronoMed</span>
+            <span className="text-2xl font-bold text-emerald-800 tracking-tight">ChronoMed</span>
           </div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-brand-blue font-bold">
+            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-brand-blue font-bold">
               {patientName ? patientName.charAt(0).toUpperCase() : <User />}
             </div>
             <span className="font-medium text-gray-700 hidden sm:block">{patientName}</span>
@@ -94,7 +94,7 @@ export default function PatientPortal() {
         <section className="bg-brand-blue rounded-2xl shadow-xl overflow-hidden mb-10">
           <div className="p-8 md:p-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-2">Book Your Appointment</h2>
-            <p className="text-blue-100 mb-8 text-lg">Fast, easy, and secure access to the best healthcare professionals.</p>
+            <p className="text-emerald-100 mb-8 text-lg">Fast, easy, and secure access to the best healthcare professionals.</p>
             
             <form onSubmit={handleBook} className="bg-white rounded-xl p-3 shadow-lg flex flex-col md:flex-row gap-3">
               <div className="flex-1 flex items-center bg-gray-50 rounded-lg px-4 border border-gray-200">
@@ -167,7 +167,7 @@ export default function PatientPortal() {
               onClick={pollQueue}
               className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
             >
-              <div className="w-12 h-12 bg-blue-50 text-brand-blue rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+              <div className="w-12 h-12 bg-emerald-50 text-brand-blue rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <Activity size={24} />
               </div>
               <h4 className="text-lg font-bold text-gray-900">My Live Queue Status</h4>
@@ -203,7 +203,7 @@ export default function PatientPortal() {
               {liveQueue && liveQueue.length > 0 ? (
                 <div className="space-y-4">
                   {liveQueue.map((apt) => (
-                    <div key={apt.id} className={`flex items-center justify-between p-4 rounded-lg border ${apt.status === 'IN_PROGRESS' ? 'bg-blue-50 border-blue-200' : apt.status === 'COMPLETED' ? 'bg-gray-50 border-gray-200 opacity-60' : 'border-gray-100'}`}>
+                    <div key={apt.id} className={`flex items-center justify-between p-4 rounded-lg border ${apt.status === 'IN_PROGRESS' ? 'bg-emerald-50 border-emerald-200' : apt.status === 'COMPLETED' ? 'bg-gray-50 border-gray-200 opacity-60' : 'border-gray-100'}`}>
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-lg ${apt.status === 'IN_PROGRESS' ? 'bg-brand-blue text-white shadow-md animate-pulse' : 'bg-gray-200 text-gray-700'}`}>
                           #{apt.queueNumber}
