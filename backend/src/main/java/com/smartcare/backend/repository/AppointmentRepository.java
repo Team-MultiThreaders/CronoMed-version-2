@@ -16,4 +16,6 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findByDoctorOrderByQueueNumberAsc(Doctor doctor);
     List<Appointment> findByDoctorAndDateOrderByQueueNumberAsc(Doctor doctor, LocalDate date);
     Optional<Appointment> findFirstByDoctorAndStatus(Doctor doctor, AppointmentStatus status);
+    Optional<Appointment> findFirstByDoctorAndDateAndStatusOrderByQueueNumberAsc(Doctor doctor, LocalDate date, AppointmentStatus status);
+    List<Appointment> findByPatientNameOrderByDateDescQueueNumberAsc(String patientName);
 }

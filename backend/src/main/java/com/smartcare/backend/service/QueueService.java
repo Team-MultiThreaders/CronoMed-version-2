@@ -39,10 +39,15 @@ public class QueueService {
         return appointmentRepository.save(appointment);
     }
 
-    public List<Appointment> getQueueForDoctor(Long doctorId) {
+    public List<Appointment> getQueueForDoctor(Long doctorId, LocalDate date) {
         Doctor doctor = doctorRepository.findById(doctorId)
                 .orElseThrow(() -> new RuntimeException("Doctor not found"));
-        return appointmentRepository.findByDoctorAndDateOrderByQueueNumberAsc(doctor, LocalDate.now());
+        LocalDate targetDate = (date != null) ? date : LocalDate.now();
+        return appointmentRepository.findByDoctorAndDateOrderByQueueNumberAsc(doctor, targetDate);
+    }
+
+    public List<Appointment> getPatientHistory(String patientName) {
+        return appointmentRepository.findByPatientNameOrderByDateDescQueueNumberAsc(patientName);
     }
 
     @Transactional
@@ -52,16 +57,33 @@ public class QueueService {
 
         Doctor doctor = targetAppointment.getDoctor();
 
-        // Complete any currently in-progress appointment for this doctor
         Optional<Appointment> currentInProgress = appointmentRepository.findFirstByDoctorAndStatus(doctor, AppointmentStatus.IN_PROGRESS);
-        if (currentInProgress.isPresent()) {
+        if (currentInProgress.isPresent() && !currentInProgress.get().getId().equals(appointmentId)) {
             Appointment current = currentInProgress.get();
             current.setStatus(AppointmentStatus.COMPLETED);
             appointmentRepository.save(current);
         }
 
-        // Set target to in-progress
         targetAppointment.setStatus(AppointmentStatus.IN_PROGRESS);
         return appointmentRepository.save(targetAppointment);
+    }
+
+    @Transactional
+    public synchronized Appointment callNextPatient(Long doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+        Optional<Appointment> currentInProgress = appointmentRepository.findFirstByDoctorAndStatus(doctor, AppointmentStatus.IN_PROGRESS);
+        currentInProgress.ifPresent(current -> {
+            current.setStatus(AppointmentStatus.COMPLETED);
+            appointmentRepository.save(current);
+        });
+
+        Appointment next = appointmentRepository
+                .findFirstByDoctorAndDateAndStatusOrderByQueueNumberAsc(doctor, LocalDate.now(), AppointmentStatus.PENDING)
+                .orElseThrow(() -> new RuntimeException("No pending patients in queue"));
+
+        next.setStatus(AppointmentStatus.IN_PROGRESS);
+        return appointmentRepository.save(next);
     }
 }

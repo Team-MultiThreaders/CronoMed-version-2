@@ -41,6 +41,16 @@ export default function DoctorDashboard() {
     }
   };
 
+  const handleAutoNext = async () => {
+    try {
+      await api.put('/next', null, { params: { doctorId: doctorId || localStorage.getItem('doctorId') } });
+      fetchQueue(doctorId || localStorage.getItem('doctorId'));
+    } catch (error) {
+      console.error("Error calling next patient", error);
+      alert(error.response?.data?.message || "No pending patients in queue.");
+    }
+  };
+
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = '/';
@@ -131,7 +141,7 @@ export default function DoctorDashboard() {
             </div>
             {pendingPatients.length > 0 && (
               <button 
-                onClick={() => handleCallNext(pendingPatients[0].id)}
+                onClick={handleAutoNext}
                 className="bg-white text-brand-blue px-6 py-3 rounded-lg font-bold shadow-md hover:shadow-xl transition-all active:scale-95"
               >
                 Call Next Patient
@@ -148,7 +158,7 @@ export default function DoctorDashboard() {
              <h2 className="text-xl font-bold text-gray-900 mb-2">Ready for Next Patient?</h2>
              <p className="text-gray-500 mb-6">You have {pendingPatients.length} patients waiting in the queue.</p>
              <button 
-                onClick={() => handleCallNext(pendingPatients[0].id)}
+                onClick={handleAutoNext}
                 className="bg-brand-blue text-white px-8 py-3 rounded-lg font-bold shadow-md hover:bg-emerald-700 transition-all"
               >
                 Call Next Patient (Queue #{pendingPatients[0].queueNumber})

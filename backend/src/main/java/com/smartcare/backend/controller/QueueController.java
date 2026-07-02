@@ -6,10 +6,12 @@ import com.smartcare.backend.model.Doctor;
 import com.smartcare.backend.repository.DoctorRepository;
 import com.smartcare.backend.service.QueueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,8 +24,6 @@ public class QueueController {
     @Autowired
     private DoctorRepository doctorRepository;
 
-
-
     @GetMapping("/doctors")
     public List<Doctor> getDoctors() {
         return doctorRepository.findAll();
@@ -35,13 +35,26 @@ public class QueueController {
     }
 
     @GetMapping("/queue")
-    public List<Appointment> getQueue(@RequestParam Long doctorId) {
-        return queueService.getQueueForDoctor(doctorId);
+    public List<Appointment> getQueue(
+            @RequestParam Long doctorId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return queueService.getQueueForDoctor(doctorId, date);
+    }
+
+    @GetMapping("/history")
+    public List<Appointment> getHistory(@RequestParam String patientName) {
+        return queueService.getPatientHistory(patientName);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
     @PutMapping("/start/{id}")
     public Appointment startAppointment(@PathVariable Long id) {
         return queueService.startAppointment(id);
+    }
+
+    @PreAuthorize("hasRole('DOCTOR')")
+    @PutMapping("/next")
+    public Appointment callNext(@RequestParam Long doctorId) {
+        return queueService.callNextPatient(doctorId);
     }
 }
