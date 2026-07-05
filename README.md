@@ -80,14 +80,6 @@ Open → http://localhost:5173
 
 ---
 
-## Deploying to Vercel
-
-1. Add `VITE_API_BASE_URL=https://your-backend-url/api` in Vercel project env vars
-2. `frontend/vercel.json` is already configured for React Router
-3. Add your Vercel domain to `app.cors.allowed-origins` in the backend
-
-> Backend can't run on Vercel — deploy it on Railway, Render, or Fly.io
-
 ---
 
 ## Contributors
