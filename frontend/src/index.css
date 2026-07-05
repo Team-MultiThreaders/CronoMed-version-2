@@ -30,3 +30,89 @@
 .logo-pulse {
   animation: pulseGlow 2.5s ease-in-out infinite;
 }
+
+/* Dashboard ambient background animations */
+
+@keyframes bgDrift {
+  0%   { transform: scale(1.05) translate(0, 0); }
+  50%  { transform: scale(1.1) translate(-1.5%, 1%); }
+  100% { transform: scale(1.05) translate(0, 0); }
+}
+
+@keyframes floatSlow {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(20px, 30px); }
+}
+
+@keyframes floatSlower {
+  0%, 100% { transform: translate(0, 0); }
+  50%      { transform: translate(-25px, -20px); }
+}
+
+@keyframes pulseTravel {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-bg-drift {
+  animation: bgDrift 24s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: floatSlow 14s ease-in-out infinite;
+}
+
+.animate-float-slower {
+  animation: floatSlower 18s ease-in-out infinite;
+}
+
+.animate-pulse-travel {
+  animation: pulseTravel 16s linear infinite;
+}
+
+/* Glass card surface used throughout the post-login dashboards */
+.glass-card {
+  background-color: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-header {
+  background-color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* Horizontal EKG heartbeat banner */
+
+@keyframes ekgTravel {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-400px); }
+}
+
+@keyframes ekgDotFade {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.4); }
+}
+
+.animate-ekg-travel {
+  animation: ekgTravel 2.2s linear infinite;
+}
+
+.animate-ekg-dot {
+  animation: ekgDotFade 1.1s ease-in-out infinite;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-bg-drift,
+  .animate-float-slow,
+  .animate-float-slower,
+  .animate-pulse-travel,
+  .animate-ekg-travel,
+  .animate-ekg-dot,
+  .animate-fade-up,
+  .logo-pulse {
+    animation: none !important;
+  }
+}
