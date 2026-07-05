@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { Activity, FileText, Calendar, Clock, Stethoscope, Search, User, X, Upload } from 'lucide-react';
 import api from '../api/client';
 
+
+
 export default function PatientPortal() {
   const [doctors, setDoctors] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState('');
@@ -47,6 +49,9 @@ export default function PatientPortal() {
     fetchDoctors();
   }, []);
 
+
+
+  
   const handleBook = async (e) => {
     e.preventDefault();
     if (!selectedDoctor) return;
@@ -86,6 +91,8 @@ export default function PatientPortal() {
     }
   };
 
+
+  
   // Auto-refresh the live queue every 5s while it's open
   useEffect(() => {
     if (!showQueue || !(selectedDoctor || bookedDoctorId)) return;
@@ -105,6 +112,8 @@ export default function PatientPortal() {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
   };
 
+
+  
   const fetchHistory = async () => {
     setHistoryLoading(true);
     setHistoryError(null);
@@ -121,12 +130,15 @@ export default function PatientPortal() {
       setHistoryLoading(false);
     }
   };
+  
 
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = '/';
   };
 
+
+  // page direct
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hidden file input for document upload */}
@@ -139,6 +151,9 @@ export default function PatientPortal() {
         accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
       />
 
+
+
+      
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">

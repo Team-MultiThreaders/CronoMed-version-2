@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Users, CheckCircle, Clock, Stethoscope, LogOut } from 'lucide-react';
 import api from '../api/client';
 
+
+
 export default function DoctorDashboard() {
   const [queue, setQueue] = useState([]);
   const [doctorId, setDoctorId] = useState(null);
@@ -20,6 +22,8 @@ export default function DoctorDashboard() {
       window.location.href = '/';
       return;
     }
+
+  
     setDoctorId(id);
     fetchQueue(id, selectedDate);
 
@@ -44,6 +48,7 @@ export default function DoctorDashboard() {
       setQueueLoading(false);
     }
   };
+  
 
   const handleCallNext = async (appointmentId) => {
     setActionError(null);
@@ -81,14 +86,19 @@ export default function DoctorDashboard() {
     }
   };
 
+
+  
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = '/';
   };
 
+  
   const pendingPatients = queue.filter(q => q.status === 'PENDING');
   const inProgress = queue.find(q => q.status === 'IN_PROGRESS');
 
+
+  // start of page code
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
