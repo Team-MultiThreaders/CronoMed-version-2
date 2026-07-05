@@ -7,6 +7,13 @@ export default function DoctorDashboard() {
   const [doctorId, setDoctorId] = useState(null);
   const doctorName = localStorage.getItem('username');
 
+  // #8 — track selected date so /next can be called for the right day
+  const [selectedDate, setSelectedDate] = useState(() => new Date().toISOString().split('T')[0]);
+
+  // #10 — loading and error states
+  const [queueLoading, setQueueLoading] = useState(false);
+  const [actionError, setActionError] = useState(null);
+
   useEffect(() => {
     const id = localStorage.getItem('doctorId');
     if (!id) {
@@ -14,50 +21,63 @@ export default function DoctorDashboard() {
       return;
     }
     setDoctorId(id);
-    fetchQueue(id);
-    
+    fetchQueue(id, selectedDate);
+
     // Polling every 5 seconds
     const interval = setInterval(() => {
-      fetchQueue(id);
+      fetchQueue(id, selectedDate);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedDate]);
 
-  const fetchQueue = async (id) => {
+  const fetchQueue = async (id, date) => {
+    setQueueLoading(true);
     try {
-      const res = await api.get('/queue', { params: { doctorId: id } });
+      const params = { doctorId: id };
+      if (date) params.date = date;
+      const res = await api.get('/queue', { params });
       setQueue(res.data);
     } catch (error) {
       console.error("Error fetching queue", error);
+    } finally {
+      setQueueLoading(false);
     }
   };
 
   const handleCallNext = async (appointmentId) => {
+    setActionError(null);
     try {
       await api.put(`/start/${appointmentId}`);
-      fetchQueue(doctorId || localStorage.getItem('doctorId'));
+      fetchQueue(doctorId || localStorage.getItem('doctorId'), selectedDate);
     } catch (error) {
-      console.error("Error calling next patient", error);
+      const msg = error.response?.data?.error || 'Failed to call patient.';
+      setActionError(msg);
     }
   };
 
+  // #8 — passes selectedDate to /next so the correct date's queue is advanced
   const handleAutoNext = async () => {
+    setActionError(null);
     try {
-      await api.put('/next', null, { params: { doctorId: doctorId || localStorage.getItem('doctorId') } });
-      fetchQueue(doctorId || localStorage.getItem('doctorId'));
+      const params = { doctorId: doctorId || localStorage.getItem('doctorId') };
+      if (selectedDate) params.date = selectedDate;
+      await api.put('/next', null, { params });
+      fetchQueue(doctorId || localStorage.getItem('doctorId'), selectedDate);
     } catch (error) {
-      console.error("Error calling next patient", error);
-      alert(error.response?.data?.message || "No pending patients in queue.");
+      const msg = error.response?.data?.error || 'No pending patients in queue.';
+      setActionError(msg);
     }
   };
 
-  // Fix: explicit complete — lets doctor finish the last patient without needing to call a next one
   const handleComplete = async (appointmentId) => {
+    setActionError(null);
     try {
       await api.put(`/complete/${appointmentId}`);
-      fetchQueue(doctorId || localStorage.getItem('doctorId'));
+      fetchQueue(doctorId || localStorage.getItem('doctorId'), selectedDate);
     } catch (error) {
-      console.error("Error completing appointment", error);
+      const msg = error.response?.data?.error || 'Failed to complete appointment.';
+      setActionError(msg);
     }
   };
 
@@ -96,14 +116,45 @@ export default function DoctorDashboard() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
+
+        {/* Error banner */}
+        {actionError && (
+          <div className="mb-6 bg-red-50 border border-red-200 text-red-700 rounded-xl px-5 py-3 flex items-center justify-between">
+            <span>⚠ {actionError}</span>
+            <button onClick={() => setActionError(null)} className="text-red-400 hover:text-red-600 ml-4">&times;</button>
+          </div>
+        )}
+
+        {/* Date selector */}
+        <div className="flex items-center gap-3 mb-6">
+          <label className="text-sm font-medium text-gray-600">Viewing queue for:</label>
+          <input
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+            className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-blue"
+          />
+          {selectedDate !== new Date().toISOString().split('T')[0] && (
+            <button
+              onClick={() => setSelectedDate(new Date().toISOString().split('T')[0])}
+              className="text-xs text-brand-blue hover:underline"
+            >Back to today</button>
+          )}
+        </div>
+
         {/* Prominent Queue Header Card */}
         <div className="bg-brand-blue rounded-2xl shadow-xl overflow-hidden mb-8 text-white p-8 text-center relative">
            <div className="absolute top-0 right-0 p-8 opacity-10">
              <Users size={120} />
            </div>
            <h2 className="text-xl text-emerald-100 font-medium mb-2 relative z-10">Waiting for you</h2>
-           <h1 className="text-5xl font-bold relative z-10">Total Patients in Queue: {pendingPatients.length}</h1>
+           <h1 className="text-5xl font-bold relative z-10 flex items-center justify-center gap-4">
+             {queueLoading ? (
+               <span className="w-10 h-10 border-4 border-white border-t-transparent rounded-full animate-spin"></span>
+             ) : (
+               <>Total Patients in Queue: {pendingPatients.length}</>
+             )}
+           </h1>
         </div>
 
         {/* Stats Row */}

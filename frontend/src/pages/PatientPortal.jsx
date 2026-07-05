@@ -20,6 +20,15 @@ export default function PatientPortal() {
   const [history, setHistory] = useState([]);
   const [showHistory, setShowHistory] = useState(false);
 
+  // #10 — Loading and error states for each async operation
+  const [bookingLoading, setBookingLoading] = useState(false);
+  const [bookingError, setBookingError] = useState(null);
+  const [queueLoading, setQueueLoading] = useState(false);
+  const [queueError, setQueueError] = useState(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [historyError, setHistoryError] = useState(null);
+  const [doctorsError, setDoctorsError] = useState(null);
+
   useEffect(() => {
     const storedName = localStorage.getItem('username');
     if (storedName) {
@@ -32,6 +41,7 @@ export default function PatientPortal() {
         setDoctors(res.data);
       } catch (error) {
         console.error("Error fetching doctors", error);
+        setDoctorsError('Could not load doctors. Please refresh the page.');
       }
     };
     fetchDoctors();
@@ -39,34 +49,40 @@ export default function PatientPortal() {
 
   const handleBook = async (e) => {
     e.preventDefault();
-    if (!selectedDoctor || !patientName) return alert("Please select a doctor and ensure patient name is filled");
-
+    if (!selectedDoctor) return;
+    setBookingLoading(true);
+    setBookingError(null);
     try {
+      // #1 — patientName is NOT sent; the server derives it from the JWT
       const res = await api.post('/book', {
         doctorId: selectedDoctor,
-        patientName: patientName,
         date: date
       });
       alert(`Appointment Booked! Your Queue Number is ${res.data.queueNumber}`);
-      // Fix: save bookedDoctorId so pollQueue works even after the dropdown resets
       setBookedDoctorId(selectedDoctor);
       setSelectedDoctor('');
     } catch (error) {
-      console.error("Booking error", error);
-      alert("Failed to book appointment");
+      const msg = error.response?.data?.error || 'Failed to book appointment. Please try again.';
+      setBookingError(msg);
+    } finally {
+      setBookingLoading(false);
     }
   };
 
   const pollQueue = async () => {
-    // Fix: fall back to bookedDoctorId if nothing is currently selected
     const doctorIdToUse = selectedDoctor || bookedDoctorId;
-    if (!doctorIdToUse) return alert("Please select a doctor from the booking form to see their live queue.");
+    if (!doctorIdToUse) return;
+    setQueueLoading(true);
+    setQueueError(null);
     try {
       const res = await api.get('/queue', { params: { doctorId: doctorIdToUse, date: date || undefined } });
       setLiveQueue(res.data);
       setShowQueue(true);
     } catch (error) {
-      console.error("Error fetching queue", error);
+      const msg = error.response?.data?.error || 'Could not load queue. Please try again.';
+      setQueueError(msg);
+    } finally {
+      setQueueLoading(false);
     }
   };
 
@@ -90,13 +106,19 @@ export default function PatientPortal() {
   };
 
   const fetchHistory = async () => {
-    if (!patientName) return;
+    setHistoryLoading(true);
+    setHistoryError(null);
     try {
-      const res = await api.get('/history', { params: { patientName } });
+      // #1 — no patientName param; server scopes history to the authenticated user
+      const res = await api.get('/history');
       setHistory(res.data);
       setShowHistory(true);
     } catch (error) {
-      console.error("Error fetching history", error);
+      const msg = error.response?.data?.error || 'Could not load history. Please try again.';
+      setHistoryError(msg);
+      setShowHistory(true); // show the section so the error message is visible
+    } finally {
+      setHistoryLoading(false);
     }
   };
 
@@ -199,10 +221,23 @@ export default function PatientPortal() {
                 />
               </div>
 
+              {/* Booking error */}
+              {bookingError && (
+                <div className="mt-3 bg-red-50 border border-red-200 text-red-700 rounded-lg px-4 py-3 text-sm">
+                  ⚠ {bookingError}
+                </div>
+              )}
+
               <input type="hidden" value={patientName} readOnly />
 
-              <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-lg transition-colors shadow-md text-lg">
-                Book Now
+              <button
+                type="submit"
+                disabled={bookingLoading}
+                className="bg-green-500 hover:bg-green-600 disabled:opacity-60 text-white font-bold py-4 px-8 rounded-lg transition-colors shadow-md text-lg flex items-center gap-2"
+              >
+                {bookingLoading ? (
+                  <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin inline-block"></span> Booking...</>
+                ) : 'Book Now'}
               </button>
             </form>
           </div>
@@ -217,10 +252,11 @@ export default function PatientPortal() {
               className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
             >
               <div className="w-12 h-12 bg-blue-50 text-brand-blue rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Activity size={24} />
+                {queueLoading ? <span className="w-5 h-5 border-2 border-brand-blue border-t-transparent rounded-full animate-spin"></span> : <Activity size={24} />}
               </div>
               <h4 className="text-lg font-bold text-gray-900">My Live Queue Status</h4>
               <p className="text-gray-500 mt-1">Check your current position and estimated wait time.</p>
+              {queueError && <p className="text-red-500 text-xs mt-2">⚠ {queueError}</p>}
             </div>
 
             <div
@@ -242,10 +278,11 @@ export default function PatientPortal() {
               className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow cursor-pointer group"
             >
               <div className="w-12 h-12 bg-orange-50 text-orange-500 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Clock size={24} />
+                {historyLoading ? <span className="w-5 h-5 border-2 border-orange-400 border-t-transparent rounded-full animate-spin"></span> : <Clock size={24} />}
               </div>
               <h4 className="text-lg font-bold text-gray-900">Appointment History</h4>
               <p className="text-gray-500 mt-1">View past visits and medical prescriptions.</p>
+              {historyError && <p className="text-red-500 text-xs mt-2">⚠ {historyError}</p>}
             </div>
           </div>
         </section>
@@ -375,7 +412,13 @@ export default function PatientPortal() {
               <button onClick={() => setShowHistory(false)} className="text-gray-400 hover:text-gray-600">&times;</button>
             </div>
             <div className="p-6">
-              {history.length > 0 ? (
+              {historyLoading ? (
+                <div className="flex justify-center py-8">
+                  <span className="w-8 h-8 border-4 border-orange-300 border-t-orange-500 rounded-full animate-spin"></span>
+                </div>
+              ) : historyError ? (
+                <p className="text-red-500 text-center py-8">⚠ {historyError}</p>
+              ) : history.length > 0 ? (
                 <div className="space-y-3">
                   {history.map((apt) => (
                     <div key={apt.id} className="flex items-center justify-between p-4 rounded-lg border border-gray-100">
