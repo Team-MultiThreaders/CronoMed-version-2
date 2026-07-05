@@ -1,70 +1,94 @@
-# CronoMed-version-2.0
+# CronoMed v2
 
-ChronoMed is a full-stack, concurrent-safe hospital queue management app built with React and Spring Boot. It provides a real-time Patient Portal for booking appointments and a live Doctor Dashboard for queue management.
+Hospital queue management system. Patients book appointments, doctors manage the live queue.
 
-## 🚀 Tech Stack
+**Stack:** React + Vite (frontend) · Spring Boot 3 + PostgreSQL/Supabase (backend) · JWT auth
 
-### Frontend
-- **React.js** (Vite)
-- **Tailwind CSS v4** (Modern styling and responsive layouts)
-- **React Router** (Client-side routing)
-- **Axios** (API requests)
-- **Lucide React** (Icons)
+---
 
-### Backend
-- **Java 17** & **Spring Boot 3.4.1**
-- **Spring Data JPA / Hibernate** (ORM)
-- **PostgreSQL (Supabase)**
-- **Spring Security + JWT**
+## Run Locally
 
-## ✨ Key Features
-- **Concurrent-Safe Booking:** Thread-safe booking to prevent race conditions during simultaneous requests.
-- **Dynamic Live Queue:** Patients can see their live position in the queue.
-- **Doctor Dashboard:** Doctors can view patient load, consult patients, and mark appointments as completed.
-- **JWT Auth + Patient Registration:** Secure login and self-service patient account creation.
-
-
-## 🛠️ How to Run Locally
-
-You will need two separate terminal windows to run both the frontend and the backend.
-
-### 1. Start the Backend (Spring Boot)
-The backend runs on **Port 8080**. It will connect to Supabase Postgres and seed the doctor list.
-
+**Backend** (port 8080)
 ```bash
 cd backend
-
-# On Windows:
+$env:JWT_SECRET="dev-secret-key-for-local-testing-minimum-256-bits-long-enough"
+$env:DB_PASSWORD="pX93%ebCSZc2Xi-"
 .\gradlew.bat bootRun
-
-# On Mac/Linux:
-./gradlew bootRun
 ```
 
-### 2. Start the Frontend (React)
-The frontend runs on **Port 5173**.
-
+**Frontend** (port 5173)
 ```bash
 cd frontend
-
-# Install dependencies (only needed the first time)
 npm install
-
-# Start the development server
 npm run dev
 ```
 
-### 3. Open the App
-Once both servers are running, open your browser and navigate to:
-**http://localhost:5173/**
+Open → http://localhost:5173
 
-## 👤 How to Use
+---
 
-- **Patient Registration:** Use "Register as Patient" on the login page and sign up with a username/password.
-- **Patient Login:** Use your registered username/password.
-- **Doctor Login:** Select "Doctor" and use `password123` (seeded doctors).
+## Login Credentials
 
-## 🗄️ Doctor Seed Data
+### Patients
+| Username | Password |
+|---|---|
+| kenul | kenul_1234 |
+| nimsara | nimsara_1234 |
+| chamitha | chamitha_1234 |
+| risandu | risandu_1234 |
+| kethmika | kethmika_1234 |
 
-Doctor accounts are seeded at startup in:
-`backend/src/main/java/com/smartcare/backend/config/DataInitializer.java`
+### Doctors — password is `password123` for all
+| Username | Name |
+|---|---|
+| dr.anil.fernando | Dr. Anil Fernando — General Physician |
+| dr.chaminda.perera | Dr. Chaminda Perera — General Physician |
+| dr.ruwanthi.senanayake | Dr. Ruwanthi Senanayake — Cardiologist |
+| dr.s.jeganathan | Dr. S. Jeganathan — Neurologist |
+| dr.fathima.rizvi | Dr. Fathima Rizvi — Pediatrician |
+| dr.kithsiri.silva | Dr. Kithsiri Silva — Orthopedic Surgeon |
+| dr.m.a.dissanayake | Dr. M. A. Dissanayake — Endocrinologist |
+| dr.priyantha.gunawardena | Dr. Priyantha Gunawardena — ENT Surgeon |
+| dr.tharushi.jayasinghe | Dr. Tharushi Jayasinghe — Dermatologist |
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/auth/login` | None | Login |
+| POST | `/api/auth/register` | None | Register patient |
+| GET | `/api/doctors` | None | List doctors |
+| POST | `/api/book` | Required | Book appointment |
+| GET | `/api/queue?doctorId=&date=` | Required | Get queue |
+| GET | `/api/history` | Required | Own appointment history |
+| PUT | `/api/start/{id}` | Doctor | Start appointment |
+| PUT | `/api/complete/{id}` | Doctor | Complete appointment |
+| PUT | `/api/next?doctorId=&date=` | Doctor | Call next patient |
+
+---
+
+## Environment Variables
+
+| Variable | Where | Description |
+|---|---|---|
+| `JWT_SECRET` | Backend | Min 32 chars — app won't start without it |
+| `DB_PASSWORD` | Backend | Supabase PostgreSQL password |
+| `VITE_API_BASE_URL` | Frontend `.env` | Backend URL (default: `http://localhost:8080/api`) |
+| `app.cors.allowed-origins` | `application.properties` | Comma-separated allowed origins |
+
+---
+
+## Deploying to Vercel
+
+1. Add `VITE_API_BASE_URL=https://your-backend-url/api` in Vercel project env vars
+2. `frontend/vercel.json` is already configured for React Router
+3. Add your Vercel domain to `app.cors.allowed-origins` in the backend
+
+> Backend can't run on Vercel — deploy it on Railway, Render, or Fly.io
+
+---
+
+## Contributors
+Nimsara · Kenul · Chamitha · Risandu · Kethmika
