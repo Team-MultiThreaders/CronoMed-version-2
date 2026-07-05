@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Users, CheckCircle, Clock, Stethoscope, LogOut } from 'lucide-react';
 import api from '../api/client';
 
+
+
 export default function DoctorDashboard() {
   const [queue, setQueue] = useState([]);
   const [doctorId, setDoctorId] = useState(null);
@@ -13,6 +15,8 @@ export default function DoctorDashboard() {
       window.location.href = '/';
       return;
     }
+
+  
     setDoctorId(id);
     fetchQueue(id);
     
@@ -31,6 +35,7 @@ export default function DoctorDashboard() {
       console.error("Error fetching queue", error);
     }
   };
+  
 
   const handleCallNext = async (appointmentId) => {
     try {
@@ -40,6 +45,13 @@ export default function DoctorDashboard() {
       console.error("Error calling next patient", error);
     }
   };
+
+
+
+
+
+
+  
 
   const handleAutoNext = async () => {
     try {
@@ -51,6 +63,8 @@ export default function DoctorDashboard() {
     }
   };
 
+
+  
   // Fix: explicit complete — lets doctor finish the last patient without needing to call a next one
   const handleComplete = async (appointmentId) => {
     try {
@@ -61,14 +75,19 @@ export default function DoctorDashboard() {
     }
   };
 
+
+  
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = '/';
   };
 
+  
   const pendingPatients = queue.filter(q => q.status === 'PENDING');
   const inProgress = queue.find(q => q.status === 'IN_PROGRESS');
 
+
+  // start of page code
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
