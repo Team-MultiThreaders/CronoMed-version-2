@@ -8,13 +8,7 @@ Hospital queue management system. Patients book appointments, doctors manage the
 
 ## Run Locally
 
-**Backend** (port 8080)
-```bash
-cd backend
-$env:JWT_SECRET="dev-secret-key-for-local-testing-minimum-256-bits-long-enough"
-$env:DB_PASSWORD="pX93%ebCSZc2Xi-"
-.\gradlew.bat bootRun
-```
+
 
 **Frontend** (port 5173)
 ```bash
