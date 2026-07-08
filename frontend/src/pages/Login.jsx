@@ -62,7 +62,11 @@ export default function Login() {
           return;
         }
 
-        const requestUsername = role === 'Patient' ? username : toDoctorUsername(doctor?.name || '');
+        // Admin and Patient use the typed username directly; Doctor derives it from the selected doctor
+        const requestUsername =
+          role === 'Patient' || role === 'Admin'
+            ? username
+            : toDoctorUsername(doctor?.name || '');
         const response = await api.post('/auth/login', {
           username: requestUsername,
           password
@@ -73,6 +77,9 @@ export default function Login() {
           if (role === 'Patient') {
             localStorage.setItem('username', requestUsername);
             navigate('/patient');
+          } else if (role === 'Admin') {
+            localStorage.setItem('username', requestUsername);
+            navigate('/admin');
           } else {
             localStorage.setItem('username', doctor?.name || '');
             localStorage.setItem('doctorId', doctorId);
@@ -167,12 +174,13 @@ export default function Login() {
                 >
                   <option value="Patient">Patient</option>
                   <option value="Doctor">Doctor</option>
+                  <option value="Admin">Admin</option>
                 </select>
               </div>
             </div>
           )}
 
-          {isRegistering || role === 'Patient' ? (
+          {(isRegistering || role === 'Patient' || role === 'Admin') ? (
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Username</label>
               <div className="flex items-center bg-gray-50 rounded-xl border border-gray-200 focus-within:ring-2 focus-within:ring-brand-blue px-4">

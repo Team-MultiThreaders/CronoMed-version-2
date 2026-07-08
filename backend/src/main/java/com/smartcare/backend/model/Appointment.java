@@ -2,6 +2,7 @@ package com.smartcare.backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 
@@ -30,6 +31,8 @@ public class Appointment {
     
     private LocalDate date;
 
+    /** Timestamp recorded when appointment transitions to IN_PROGRESS. */
+    private LocalDateTime startedAt;
 
 
     
@@ -45,4 +48,6 @@ public class Appointment {
     public void setPatientName(String patientName) { this.patientName = patientName; }
     public LocalDate getDate() { return date; }
     public void setDate(LocalDate date) { this.date = date; }
+    public LocalDateTime getStartedAt() { return startedAt; }
+    public void setStartedAt(LocalDateTime startedAt) { this.startedAt = startedAt; }
 }

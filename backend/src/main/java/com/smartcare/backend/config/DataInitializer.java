@@ -64,6 +64,12 @@ public class DataInitializer {
                     System.out.println("Seeded patient: " + patient[0]);
                 }
             }
+
+            // Seed admin account
+            if (userRepository.findByUsername("admin").isEmpty()) {
+                userRepository.save(createUser("admin", "admin_1234", Role.ADMIN, passwordEncoder));
+                System.out.println("Seeded admin: admin");
+            }
         };
     }
 

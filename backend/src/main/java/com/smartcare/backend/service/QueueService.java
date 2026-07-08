@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -117,6 +118,7 @@ public class QueueService {
         
 
         targetAppointment.setStatus(AppointmentStatus.IN_PROGRESS);
+        targetAppointment.setStartedAt(LocalDateTime.now());
         return appointmentRepository.save(targetAppointment);
     }
 
@@ -169,6 +171,7 @@ public class QueueService {
 
             
             next.setStatus(AppointmentStatus.IN_PROGRESS);
+            next.setStartedAt(LocalDateTime.now());
             return appointmentRepository.save(next);
         }
         
