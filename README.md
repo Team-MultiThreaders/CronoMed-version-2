@@ -2,8 +2,9 @@
 
 > A modern, secure, and concurrent-safe hospital queue management system that simplifies appointment booking and enables real-time queue management for both patients and doctors.
 
+
 <p align="center">
-  <img src="./assets/login.png" width="750" alt="ChronoMed Login"/>
+  <img width="1920" height="1080" alt="hero-medical" src="https://github.com/user-attachments/assets/cbae042c-dbde-4f3a-af5c-fd0df4d34ad5" />
 </p>
 
 ---
@@ -136,10 +137,12 @@ Stay tuned—more exciting features are on the way!
 
 ## 👨‍💻 Team MultiThreaders
 
+- Nimsara Kodithuwakku
+<img width="1920" height="1080" alt="hero-medical" src="https://github.com/user-attachments/assets/a13a49f9-ac68-450f-bb9a-9f6c72dc6ea6" />
 - Yasandu Kethmika
-- Nimsara Botheju
-- Lakshan Perera
-- Dissanayake
+- Kenul Perera
+- Risandu Dissanayake
+- Chamitha Botheju
 
 ---
 
