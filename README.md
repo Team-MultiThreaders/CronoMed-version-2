@@ -1,80 +1,152 @@
-# CronoMed v2
+# 🏥 ChronoMed v2.0
 
-Hospital queue management system. Patients book appointments, doctors manage the live queue.
+> A modern, secure, and concurrent-safe hospital queue management system that simplifies appointment booking and enables real-time queue management for both patients and doctors.
 
-**Stack:** React + Vite (frontend) · Spring Boot 3 + PostgreSQL/Supabase (backend) · JWT aut
-
----
-
-## Run Locally
-
-
-
-**Frontend** (port 5173)
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open → http://localhost:5173
+<p align="center">
+  <img src="./assets/login.png" width="750" alt="ChronoMed Login"/>
+</p>
 
 ---
 
-## Login Credentials
+## 📖 Overview
 
-### Patients
-| Username | Password |
-|---|---|
-| kenul | kenul_1234 |
-| nimsara | nimsara_1234 |
-| chamitha | chamitha_1234 |
-| risandu | risandu_1234 |
-| kethmika | kethmika_1234 |
+Long waiting times and inefficient queue management are common challenges in healthcare systems. **ChronoMed v2.0** addresses these issues by providing a secure, real-time platform where patients can book appointments while doctors efficiently manage their consultation queues.
 
-### Doctors — password is `password123` for all
-| Username | Name |
-|---|---|
-| dr.anil.fernando | Dr. Anil Fernando — General Physician |
-| dr.chaminda.perera | Dr. Chaminda Perera — General Physician |
-| dr.ruwanthi.senanayake | Dr. Ruwanthi Senanayake — Cardiologist |
-| dr.s.jeganathan | Dr. S. Jeganathan — Neurologist |
-| dr.fathima.rizvi | Dr. Fathima Rizvi — Pediatrician |
-| dr.kithsiri.silva | Dr. Kithsiri Silva — Orthopedic Surgeon |
-| dr.m.a.dissanayake | Dr. M. A. Dissanayake — Endocrinologist |
-| dr.priyantha.gunawardena | Dr. Priyantha Gunawardena — ENT Surgeon |
-| dr.tharushi.jayasinghe | Dr. Tharushi Jayasinghe — Dermatologist |
+The system focuses on **performance, security, concurrency, and user experience**, making the appointment process smooth for both patients and healthcare providers.
 
 ---
 
-## API Endpoints
+## ✨ Features
 
-| Method | Endpoint | Auth | Description |
-|---|---|---|---|
-| POST | `/api/auth/login` | None | Login |
-| POST | `/api/auth/register` | None | Register patient |
-| GET | `/api/doctors` | None | List doctors |
-| POST | `/api/book` | Required | Book appointment |
-| GET | `/api/queue?doctorId=&date=` | Required | Get queue |
-| GET | `/api/history` | Required | Own appointment history |
-| PUT | `/api/start/{id}` | Doctor | Start appointment |
-| PUT | `/api/complete/{id}` | Doctor | Complete appointment |
-| PUT | `/api/next?doctorId=&date=` | Doctor | Call next patient |
+### 👤 Authentication & Security
+- JWT Authentication
+- Role-Based Access Control
+- Patient Registration
+- Secure Password Encryption
+- Protected REST APIs
+
+### 🩺 Patient Portal
+- Patient Registration & Login
+- Search Doctors
+- Filter by Specialization
+- Book Appointments
+- Receive Instant Queue Number
+- View Live Queue Status
+
+### 👨‍⚕️ Doctor Dashboard
+- Secure Doctor Login
+- Live Queue Dashboard
+- Call Next Patient
+- Start Consultation
+- Complete Consultation
+- Queue Statistics
+
+### ⚡ Queue Management
+- Concurrent-safe appointment booking
+- Thread-safe queue allocation
+- Live queue synchronization
+- Prevent duplicate queue numbers
+- Automatic appointment status updates
 
 ---
 
-## Environment Variables
+## 🛠 Tech Stack
 
-| Variable | Where | Description |
-|---|---|---|
-| `JWT_SECRET` | Backend | Min 32 chars — app won't start without it |
-| `DB_PASSWORD` | Backend | Supabase PostgreSQL password |
-| `VITE_API_BASE_URL` | Frontend `.env` | Backend URL (default: `http://localhost:8080/api`) |
-| `app.cors.allowed-origins` | `application.properties` | Comma-separated allowed origins |
+### Frontend
+- React.js (Vite)
+- Tailwind CSS v4
+- React Router
+- Axios
+- Lucide React
+
+### Backend
+- Java 17
+- Spring Boot 3
+- Spring Security
+- Spring Data JPA
+- Hibernate
+
+### Database
+- PostgreSQL (Supabase)
+
+### Authentication
+- JWT (JSON Web Tokens)
 
 ---
 
+## 📸 Preview
+
+### Login & Authentication
+
+<p align="center">
+<img src="./assets/login.png" width="750"/>
+</p>
+
+Secure role-based authentication for Patients and Doctors using JWT.
+
 ---
 
-## Contributors
-Nimsara · Kenul · Chamitha · Risandu · Kethmika
+### Doctor Dashboard
+
+<p align="center">
+<img src="./assets/dashboard.png" width="750"/>
+</p>
+
+Doctors can monitor queues, call the next patient, and manage consultations in real time.
+
+---
+
+## 🔐 Security Highlights
+
+- JWT Authentication
+- Password Encryption
+- Protected REST Endpoints
+- Role-based Authorization
+- Secure API Communication
+
+---
+
+## ⚙️ Concurrency
+
+ChronoMed implements a **thread-safe booking mechanism** to ensure:
+
+- No duplicate queue numbers
+- Consistent appointment ordering
+- Reliable booking under concurrent requests
+
+---
+
+## 🚀 Future Improvements
+
+We're continuously improving ChronoMed. Upcoming updates include:
+
+- 📱 Mobile Application
+- 🔔 SMS & Email Notifications
+- 📅 Calendar Integration
+- 💳 Online Payment Gateway
+- 📄 Digital Medical Records
+- 📊 Admin Dashboard
+- 🤖 AI-powered Appointment Recommendations
+- 🌐 Cloud Deployment
+- 📈 Analytics & Reports
+
+Stay tuned—more exciting features are on the way!
+
+---
+
+## 👨‍💻 Team MultiThreaders
+
+- Yasandu Kethmika
+- Nimsara Botheju
+- Lakshan Perera
+- Dissanayake
+
+---
+
+## 🙏 Acknowledgements
+
+A heartfelt thank you to **Prof. Chandana** for providing us with the opportunity, guidance, and encouragement throughout the development of this project.
+
+---
+
+⭐ If you like this project, don't forget to give the repository a star!
